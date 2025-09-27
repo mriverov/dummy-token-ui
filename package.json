@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:cov": "vitest run --coverage"
   },
   "dependencies": {
     "decentraland-ui": "^6.22.0",
@@ -31,6 +34,7 @@
     "@types/react": "^17.0.83",
     "@types/react-dom": "^17.0.26",
     "@types/redux-logger": "^3.0.13",
+    "@vitejs/plugin-react": "^5.0.3",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
@@ -39,9 +43,11 @@
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
     "jest": "^29.7.0",
+    "jsdom": "^27.0.0",
     "prettier": "^3.6.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.18.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.5",
+    "vitest": "^3.2.4"
   }
 }

@@ -14,7 +14,7 @@ import { WalletState } from './types'
 
 const INITIAL_STATE: WalletState = {
   address: null,
-  balance: null,
+  balance: '0 DUMMY',
   isConnecting: false,
   isTransferring: false,
   error: null,
@@ -53,7 +53,7 @@ export function walletReducer(state: WalletState = INITIAL_STATE, action: AnyAct
       return { ...state, isTransferring: true, error: null }
 
     case TRANSFER_TOKEN_SUCCESS:
-      return { ...state, isTransferring: false }
+      return { ...state, isTransferring: false, error: null }
 
     case TRANSFER_TOKEN_FAILURE:
       return { ...state, isTransferring: false, error: action.payload.error }

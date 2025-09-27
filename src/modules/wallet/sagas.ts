@@ -63,7 +63,7 @@ export function* walletSaga() {
 }
 
 
-function* handleConnectWalletRequest() {
+export function* handleConnectWalletRequest() {
   try {
     const provider: ethers.BrowserProvider = yield call(getProvider)
     yield* requestAccounts(provider)
@@ -81,7 +81,7 @@ function* handleConnectWalletRequest() {
   }
 }
 
-function* handleTransferTokenRequest(action: TransferTokenRequestAction) {
+export function* handleTransferTokenRequest(action: TransferTokenRequestAction) {
   try {
     const { to, amount } = action.payload
 
