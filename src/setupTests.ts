@@ -17,7 +17,7 @@ if (typeof window !== 'undefined' && !window.ethereum) {
   const mockEthereum: EthereumLike = {
     request: async (_args: { method: string; params?: unknown[] | object }) => undefined,
     on: () => undefined,
-    removeListener: () => undefined
+    removeListener: () => undefined,
   }
   window.ethereum = mockEthereum
 }

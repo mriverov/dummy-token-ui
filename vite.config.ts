@@ -10,7 +10,7 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
     env: {
-      VITE_TOKEN_ADDRESS: '0x1234567890abcdef1234567890abcdef12345678'
-    }
+      VITE_TOKEN_ADDRESS: '0x1234567890abcdef1234567890abcdef12345678',
+    },
   },
 })

@@ -5,8 +5,8 @@ import App from './App/App'
 // Mock ethers to avoid dependency issues in tests
 vi.mock('ethers', () => ({
   ethers: {
-    isAddress: (address: string) => /^0x[a-fA-F0-9]{40}$/.test(address)
-  }
+    isAddress: (address: string) => /^0x[a-fA-F0-9]{40}$/.test(address),
+  },
 }))
 
 function setup(partial?: Partial<React.ComponentProps<typeof App>>) {
@@ -19,7 +19,7 @@ function setup(partial?: Partial<React.ComponentProps<typeof App>>) {
     error: null,
     onConnect: vi.fn(),
     onTransfer: vi.fn(),
-    ...partial
+    ...partial,
   }
   return { ...render(<App {...props} />), props }
 }
@@ -42,7 +42,7 @@ describe('App Component - Connection State', () => {
   test('calls onConnect when Connect button is clicked', async () => {
     const user = userEvent.setup()
     const { props } = setup({ isConnected: false })
-    
+
     await user.click(screen.getByRole('button', { name: /connect/i }))
     expect(props.onConnect).toHaveBeenCalledTimes(1)
   })
@@ -81,9 +81,9 @@ describe('App Component - Transfer Modal', () => {
   test('opens transfer modal when Transfer button is clicked', async () => {
     const user = userEvent.setup()
     setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    
+
     expect(screen.getByText(/send tokens to an account/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^send$/i })).toBeInTheDocument()
   })
@@ -91,9 +91,9 @@ describe('App Component - Transfer Modal', () => {
   test('shows form fields in transfer modal', async () => {
     const user = userEvent.setup()
     setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    
+
     expect(screen.getByPlaceholderText('100')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('0x...')).toBeInTheDocument()
   })
@@ -101,10 +101,10 @@ describe('App Component - Transfer Modal', () => {
   test('modal can be closed', async () => {
     const user = userEvent.setup()
     setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
     expect(screen.getByText(/send tokens to an account/i)).toBeInTheDocument()
-    
+
     // Test that modal is open and can be interacted with
     expect(screen.getByRole('button', { name: /^send$/i })).toBeInTheDocument()
   })
@@ -112,9 +112,9 @@ describe('App Component - Transfer Modal', () => {
   test('does not show close button when transferring', async () => {
     const user = userEvent.setup()
     setup({ isTransferring: true })
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    
+
     expect(screen.queryByRole('button', { name: /close/i })).not.toBeInTheDocument()
   })
 })
@@ -123,9 +123,12 @@ describe('App Component - Transfer Form Validation', () => {
   test('enables Send button with valid address and amount', async () => {
     const user = userEvent.setup()
     const { props } = setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    await user.type(screen.getByPlaceholderText('0x...'), '0x70997970C51812dc3A010C7d01b50e0d17dc79C8')
+    await user.type(
+      screen.getByPlaceholderText('0x...'),
+      '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    )
     await user.type(screen.getByPlaceholderText('100'), '10')
 
     const sendButton = screen.getByRole('button', { name: /^send$/i })
@@ -135,7 +138,7 @@ describe('App Component - Transfer Form Validation', () => {
   test('disables Send button with invalid address', async () => {
     const user = userEvent.setup()
     setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
     await user.type(screen.getByPlaceholderText('0x...'), 'invalid-address')
     await user.type(screen.getByPlaceholderText('100'), '10')
@@ -147,9 +150,12 @@ describe('App Component - Transfer Form Validation', () => {
   test('disables Send button with invalid amount format', async () => {
     const user = userEvent.setup()
     setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    await user.type(screen.getByPlaceholderText('0x...'), '0x70997970C51812dc3A010C7d01b50e0d17dc79C8')
+    await user.type(
+      screen.getByPlaceholderText('0x...'),
+      '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    )
     await user.type(screen.getByPlaceholderText('100'), 'abc')
 
     const sendButton = screen.getByRole('button', { name: /^send$/i })
@@ -159,9 +165,12 @@ describe('App Component - Transfer Form Validation', () => {
   test('disables Send button with amount greater than balance', async () => {
     const user = userEvent.setup()
     setup({ balance: '50 DUMMY' })
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    await user.type(screen.getByPlaceholderText('0x...'), '0x70997970C51812dc3A010C7d01b50e0d17dc79C8')
+    await user.type(
+      screen.getByPlaceholderText('0x...'),
+      '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    )
     await user.type(screen.getByPlaceholderText('100'), '100')
 
     const sendButton = screen.getByRole('button', { name: /^send$/i })
@@ -171,9 +180,12 @@ describe('App Component - Transfer Form Validation', () => {
   test('disables Send button with zero amount', async () => {
     const user = userEvent.setup()
     setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    await user.type(screen.getByPlaceholderText('0x...'), '0x70997970C51812dc3A010C7d01b50e0d17dc79C8')
+    await user.type(
+      screen.getByPlaceholderText('0x...'),
+      '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    )
     await user.type(screen.getByPlaceholderText('100'), '0')
 
     const sendButton = screen.getByRole('button', { name: /^send$/i })
@@ -183,7 +195,7 @@ describe('App Component - Transfer Form Validation', () => {
   test('shows error message for invalid address', async () => {
     const user = userEvent.setup()
     setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
     await user.type(screen.getByPlaceholderText('0x...'), 'invalid-address')
 
@@ -193,7 +205,7 @@ describe('App Component - Transfer Form Validation', () => {
   test('shows error message for invalid amount format', async () => {
     const user = userEvent.setup()
     setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
     await user.type(screen.getByPlaceholderText('100'), 'abc')
 
@@ -203,9 +215,12 @@ describe('App Component - Transfer Form Validation', () => {
   test('shows error message for insufficient balance', async () => {
     const user = userEvent.setup()
     setup({ balance: '50 DUMMY' })
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    await user.type(screen.getByPlaceholderText('0x...'), '0x70997970C51812dc3A010C7d01b50e0d17dc79C8')
+    await user.type(
+      screen.getByPlaceholderText('0x...'),
+      '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    )
     await user.type(screen.getByPlaceholderText('100'), '100')
 
     expect(screen.getByText(/saldo insuficiente/i)).toBeInTheDocument()
@@ -216,39 +231,45 @@ describe('App Component - Transfer Actions', () => {
   test('calls onTransfer with correct parameters when Send is clicked', async () => {
     const user = userEvent.setup()
     const { props } = setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    await user.type(screen.getByPlaceholderText('0x...'), '0x70997970C51812dc3A010C7d01b50e0d17dc79C8')
+    await user.type(
+      screen.getByPlaceholderText('0x...'),
+      '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    )
     await user.type(screen.getByPlaceholderText('100'), '10')
     await user.click(screen.getByRole('button', { name: /^send$/i }))
 
     expect(props.onTransfer).toHaveBeenCalledWith(
       '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-      '10'
+      '10',
     )
   })
 
   test('trims whitespace from input values', async () => {
     const user = userEvent.setup()
     const { props } = setup()
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    await user.type(screen.getByPlaceholderText('0x...'), '  0x70997970C51812dc3A010C7d01b50e0d17dc79C8  ')
+    await user.type(
+      screen.getByPlaceholderText('0x...'),
+      '  0x70997970C51812dc3A010C7d01b50e0d17dc79C8  ',
+    )
     await user.type(screen.getByPlaceholderText('100'), '  10  ')
     await user.click(screen.getByRole('button', { name: /^send$/i }))
 
     expect(props.onTransfer).toHaveBeenCalledWith(
       '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-      '10'
+      '10',
     )
   })
 
   test('disables Send button when transferring', async () => {
     const user = userEvent.setup()
     setup({ isTransferring: true })
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    
+
     const sendButton = screen.getByRole('button', { name: /^send$/i })
     expect(sendButton).toBeDisabled()
     expect(sendButton).toHaveClass('loading')
@@ -257,9 +278,9 @@ describe('App Component - Transfer Actions', () => {
   test('disables form fields when transferring', async () => {
     const user = userEvent.setup()
     setup({ isTransferring: true })
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    
+
     expect(screen.getByPlaceholderText('100')).toBeDisabled()
   })
 })
@@ -268,22 +289,27 @@ describe('App Component - Transfer Success/Error Handling', () => {
   test('closes modal and clears form after successful transfer', async () => {
     const user = userEvent.setup()
     const { rerender } = setup({ isTransferring: true })
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    await user.type(screen.getByPlaceholderText('0x...'), '0x70997970C51812dc3A010C7d01b50e0d17dc79C8')
+    await user.type(
+      screen.getByPlaceholderText('0x...'),
+      '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    )
     await user.type(screen.getByPlaceholderText('100'), '10')
-    
+
     // Simulate transfer completion
-    rerender(<App 
-      address="0x1234567890abcdef1234567890abcdef12345678"
-      balance="90 DUMMY"
-      isConnected={true}
-      isConnecting={false}
-      isTransferring={false}
-      error={null}
-      onConnect={vi.fn()}
-      onTransfer={vi.fn()}
-    />)
+    rerender(
+      <App
+        address="0x1234567890abcdef1234567890abcdef12345678"
+        balance="90 DUMMY"
+        isConnected={true}
+        isConnecting={false}
+        isTransferring={false}
+        error={null}
+        onConnect={vi.fn()}
+        onTransfer={vi.fn()}
+      />,
+    )
 
     await waitFor(() => {
       expect(screen.queryByText(/send tokens to an account/i)).not.toBeInTheDocument()
@@ -293,18 +319,18 @@ describe('App Component - Transfer Success/Error Handling', () => {
   test('shows error message in modal when transfer fails', async () => {
     const user = userEvent.setup()
     setup({ isTransferring: false, error: 'Transfer failed' })
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    
+
     expect(screen.getByText('Transfer failed')).toBeInTheDocument()
   })
 
   test('does not show error message in modal when transferring', async () => {
     const user = userEvent.setup()
     setup({ isTransferring: true, error: 'Transfer failed' })
-    
+
     await user.click(screen.getByRole('button', { name: /transfer/i }))
-    
+
     expect(screen.queryByText('Transfer failed')).not.toBeInTheDocument()
   })
 })

@@ -46,7 +46,7 @@ function* getSigner(provider: ethers.BrowserProvider) {
   return (yield call(() => provider.getSigner())) as ethers.Signer
 }
 
-function getToken(reader: ethers.Signer | ethers.BrowserProvider) {
+function getToken(reader: ethers.BrowserProvider) {
   if (!TOKEN_ADDRESS) throw new Error('Missing VITE_TOKEN_ADDRESS')
   return new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, reader)
 }
@@ -62,7 +62,6 @@ export function* walletSaga() {
   yield takeEvery(TRANSFER_TOKEN_REQUEST, handleTransferTokenRequest)
 }
 
-
 export function* handleConnectWalletRequest() {
   try {
     const provider: ethers.BrowserProvider = yield call(getProvider)
@@ -71,7 +70,7 @@ export function* handleConnectWalletRequest() {
     const signer = (yield* getSigner(provider)) as ethers.Signer
     const address = (yield call(() => signer.getAddress())) as string
 
-    const token = getToken(provider) 
+    const token = getToken(provider)
     const pretty = (yield call(() => readPrettyBalance(token, address))) as string
 
     yield put(connectWalletSuccess(address, pretty))
@@ -87,9 +86,8 @@ export function* handleTransferTokenRequest(action: TransferTokenRequestAction) 
 
     const provider: ethers.BrowserProvider = yield call(getProvider)
 
-
     const signer = (yield* getSigner(provider)) as ethers.Signer
-    const token = getToken(signer) 
+    const token = getToken(signer)
 
     const value = ethers.parseUnits(amount.trim(), DECIMALS)
     const tx = (yield call(() => token.transfer(to.trim(), value))) as ethers.TransactionResponse

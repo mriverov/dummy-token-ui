@@ -7,7 +7,7 @@ import { applyMiddleware, combineReducers } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { walletReducer } from '../modules/wallet/reducer'
 import { walletSaga } from '../modules/wallet/sagas'
-import { legacy_createStore as createStore} from 'redux'
+import { legacy_createStore as createStore } from 'redux'
 
 const rootReducer = combineReducers({
   wallet: walletReducer,
@@ -16,11 +16,7 @@ export type TestRootState = ReturnType<typeof rootReducer>
 
 export function makeTestStore(preloadedState?: Partial<TestRootState>) {
   const sagaMiddleware = createSagaMiddleware()
-  const store = createStore(
-    rootReducer,
-    preloadedState,
-    applyMiddleware(sagaMiddleware)
-  )
+  const store = createStore(rootReducer, preloadedState, applyMiddleware(sagaMiddleware))
   sagaMiddleware.run(walletSaga)
   return store
 }
@@ -31,7 +27,7 @@ export function renderWithProviders(
     preloadedState,
     store = makeTestStore(preloadedState),
     ...renderOptions
-  }: { preloadedState?: Partial<TestRootState>; store?: any } & Omit<RenderOptions, 'wrapper'> = {}
+  }: { preloadedState?: Partial<TestRootState>; store?: any } & Omit<RenderOptions, 'wrapper'> = {},
 ) {
   function Wrapper({ children }: PropsWithChildren<{}>) {
     return <Provider store={store}>{children}</Provider>

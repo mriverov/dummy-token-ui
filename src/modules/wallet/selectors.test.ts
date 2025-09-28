@@ -1,4 +1,11 @@
-import { getAddress, getBalance, isConnected, isConnecting, getError, isTransferring } from './selectors'
+import {
+  getAddress,
+  getBalance,
+  isConnected,
+  isConnecting,
+  getError,
+  isTransferring,
+} from './selectors'
 import { RootState } from '../types'
 
 const mockState: RootState = {
@@ -8,7 +15,7 @@ const mockState: RootState = {
     isConnecting: false,
     isTransferring: false,
     error: null,
-  }
+  },
 }
 
 const mockStateDisconnected: RootState = {
@@ -18,7 +25,7 @@ const mockStateDisconnected: RootState = {
     isConnecting: true,
     isTransferring: false,
     error: 'Connection failed',
-  }
+  },
 }
 
 test('getAddress returns address when connected', () => {

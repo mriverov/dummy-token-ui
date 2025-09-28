@@ -53,11 +53,17 @@ test('CONNECT_WALLET_FAILURE deactivates isConnecting and sets error', () => {
 
 test('TRANSFER_TOKEN_SUCCESS deactivates isTransferring and clears error', () => {
   const s = walletReducer(
-    { address: '0xabc', balance: '100 DUMMY', isConnecting: false, isTransferring: true, error: 'Previous error' },
+    {
+      address: '0xabc',
+      balance: '100 DUMMY',
+      isConnecting: false,
+      isTransferring: true,
+      error: 'Previous error',
+    },
     {
       type: TRANSFER_TOKEN_SUCCESS,
       payload: { txHash: '0xtx123' },
-    }
+    },
   )
   expect(s.isTransferring).toBe(false)
   expect(s.error).toBeNull()
