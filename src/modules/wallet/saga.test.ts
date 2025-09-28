@@ -110,7 +110,7 @@ test('handleTransferTokenRequest dispatch transferTokenSuccess correctly', async
 
   const successAction = dispatched.find(action => action.type === '[Success] Transfer Token')
   expect(successAction).toBeTruthy()
-  expect(successAction.payload.txHash).toBe('0xtxhash123')
+  expect(successAction.payload).toEqual({})
 
   // setBalance is not dispatched in the current implementation
   const setBalanceAction = dispatched.find(action => action.type === '[State] Set Balance')

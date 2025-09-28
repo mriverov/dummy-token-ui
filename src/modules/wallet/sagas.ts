@@ -48,7 +48,7 @@ function* getSigner(provider: ethers.BrowserProvider) {
   return (yield call(() => provider.getSigner())) as ethers.Signer
 }
 
-function getToken(reader: ethers.BrowserProvider) {
+function getToken(reader: ethers.Signer | ethers.BrowserProvider) {
   if (!TOKEN_ADDRESS) throw new Error('Missing VITE_TOKEN_ADDRESS')
   return new ethers.Contract(TOKEN_ADDRESS, TOKEN_ABI, reader)
 }
@@ -74,9 +74,9 @@ export function* handleConnectWalletRequest() {
     const address = (yield call(() => signer.getAddress())) as string
 
     const token = getToken(provider)
-    const pretty = (yield call(() => readPrettyBalance(token, address))) as string
+    const balance = (yield call(() => readPrettyBalance(token, address))) as string
 
-    yield put(connectWalletSuccess(address, pretty))
+    yield put(connectWalletSuccess(address, balance))
   } catch (error) {
     const msg = isErrorWithMessage(error) ? error.message : 'Unknown error'
     yield put(connectWalletFailure(msg))
@@ -88,7 +88,6 @@ export function* handleTransferTokenRequest(action: TransferTokenRequestAction) 
     const { to, amount } = action.payload
 
     const provider: ethers.BrowserProvider = yield call(getProvider)
-
     const signer = (yield* getSigner(provider)) as ethers.Signer
     const token = getToken(signer)
 
@@ -96,7 +95,7 @@ export function* handleTransferTokenRequest(action: TransferTokenRequestAction) 
     const tx = (yield call(() => token.transfer(to.trim(), value))) as ethers.TransactionResponse
     yield call(() => tx.wait())
 
-    yield put(transferTokenSuccess(tx.hash))
+    yield put(transferTokenSuccess())
   } catch (error) {
     const msg = isErrorWithMessage(error) ? error.message : 'Unknown error'
     yield put(transferTokenFailure(msg))
@@ -111,9 +110,9 @@ export function* handleRefreshBalanceRequest() {
     const address = (yield call(() => signer.getAddress())) as string
 
     const token = getToken(provider)
-    const pretty = (yield call(() => readPrettyBalance(token, address))) as string
+    const balance = (yield call(() => readPrettyBalance(token, address))) as string
 
-    yield put(refreshBalanceSuccess(pretty))
+    yield put(refreshBalanceSuccess(balance))
   } catch (error) {
     const msg = isErrorWithMessage(error) ? error.message : 'Unknown error'
     yield put(refreshBalanceFailure(msg))

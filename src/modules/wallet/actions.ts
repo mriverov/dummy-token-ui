@@ -68,8 +68,8 @@ export function connectWalletFailure(error: string) {
 export function transferTokenRequest(payload: { to: string; amount: string }) {
   return { type: TRANSFER_TOKEN_REQUEST, payload }
 }
-export function transferTokenSuccess(txHash: string) {
-  return { type: TRANSFER_TOKEN_SUCCESS, payload: { txHash } }
+export function transferTokenSuccess() {
+  return { type: TRANSFER_TOKEN_SUCCESS, payload: {} }
 }
 export function transferTokenFailure(error: string) {
   return { type: TRANSFER_TOKEN_FAILURE, payload: { error } }

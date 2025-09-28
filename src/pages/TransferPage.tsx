@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { Props } from '../components/App/App.types'
 import { ROUTES, MESSAGES } from '../constants'
-import { validateAddress, validateAmount } from '../utils/errorHandling'
 import '../styles/components.css'
 
 type TransferProps = Pick<Props, 'address' | 'balance' | 'isTransferring' | 'onTransfer' | 'error'>
