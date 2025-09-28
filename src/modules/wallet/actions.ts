@@ -10,9 +10,33 @@ export const TRANSFER_TOKEN_FAILURE = '[Failure] Transfer Token'
 
 // Balance
 export const SET_BALANCE = '[State] Set Balance'
+export const REFRESH_BALANCE_REQUEST = '[Request] Refresh Balance'
+export const REFRESH_BALANCE_SUCCESS = '[Success] Refresh Balance'
+export const REFRESH_BALANCE_FAILURE = '[Failure] Refresh Balance'
 
 export function setBalance(balance: string) {
   return { type: SET_BALANCE, payload: { balance } }
+}
+
+export function refreshBalanceRequest() {
+  return {
+    type: REFRESH_BALANCE_REQUEST,
+    payload: {},
+  }
+}
+
+export function refreshBalanceSuccess(balance: string) {
+  return {
+    type: REFRESH_BALANCE_SUCCESS,
+    payload: { balance },
+  }
+}
+
+export function refreshBalanceFailure(error: string) {
+  return {
+    type: REFRESH_BALANCE_FAILURE,
+    payload: { error },
+  }
 }
 
 export function connectWalletRequest() {
@@ -60,3 +84,6 @@ export type TransferTokenSuccessAction = ReturnType<typeof transferTokenSuccess>
 export type TransferTokenFailureAction = ReturnType<typeof transferTokenFailure>
 
 export type SetBalanceAction = ReturnType<typeof setBalance>
+export type RefreshBalanceRequestAction = ReturnType<typeof refreshBalanceRequest>
+export type RefreshBalanceSuccessAction = ReturnType<typeof refreshBalanceSuccess>
+export type RefreshBalanceFailureAction = ReturnType<typeof refreshBalanceFailure>

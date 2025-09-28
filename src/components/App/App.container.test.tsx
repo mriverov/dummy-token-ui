@@ -1,4 +1,3 @@
-/* eslint-disable no-empty-pattern */
 import { screen, fireEvent } from '@testing-library/react'
 import { renderWithProviders } from '../../test/test-utils'
 import ConnectedApp from './index'
@@ -15,7 +14,8 @@ test('show balance from store', () => {
       },
     },
   })
-  expect(screen.getByText(/100 DUMMY/i)).toBeInTheDocument()
+
+  expect(screen.getByText('100 DUMMY')).toBeInTheDocument()
 })
 
 test('show Connect when not connected', () => {
@@ -63,7 +63,24 @@ test('show error when there is an error', () => {
   expect(screen.getByText('Connection failed')).toBeInTheDocument()
 })
 
-test('allow open transfer modal when connected', async () => {
+test('show wallet page when connected', () => {
+  renderWithProviders(<ConnectedApp />, {
+    preloadedState: {
+      wallet: {
+        address: '0xabc',
+        balance: '100 DUMMY',
+        isConnecting: false,
+        isTransferring: false,
+        error: null,
+      },
+    },
+  })
+
+  expect(screen.getByText(/wallet/i)).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: /transfer/i })).toBeInTheDocument()
+})
+
+test('navigate to transfer page when transfer button is clicked', () => {
   renderWithProviders(<ConnectedApp />, {
     preloadedState: {
       wallet: {

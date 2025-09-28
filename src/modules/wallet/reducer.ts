@@ -9,12 +9,16 @@ import {
   TRANSFER_TOKEN_SUCCESS,
   TRANSFER_TOKEN_FAILURE,
   SET_BALANCE,
+  REFRESH_BALANCE_REQUEST,
+  REFRESH_BALANCE_SUCCESS,
+  REFRESH_BALANCE_FAILURE,
 } from './actions'
 import { WalletState } from './types'
+import { TOKEN } from '../../constants'
 
 const INITIAL_STATE: WalletState = {
   address: null,
-  balance: '0 DUMMY',
+  balance: TOKEN.DEFAULT_BALANCE,
   isConnecting: false,
   isTransferring: false,
   error: null,
@@ -60,6 +64,20 @@ export function walletReducer(state: WalletState = INITIAL_STATE, action: AnyAct
 
     case SET_BALANCE: {
       return { ...state, balance: action.payload.balance }
+    }
+
+    case REFRESH_BALANCE_REQUEST: {
+      return { ...state, error: null }
+    }
+
+    case REFRESH_BALANCE_SUCCESS: {
+      const { balance } = action.payload as { balance: string }
+      return { ...state, balance, error: null }
+    }
+
+    case REFRESH_BALANCE_FAILURE: {
+      const { error } = action.payload as { error: string }
+      return { ...state, error }
     }
 
     default:
