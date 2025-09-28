@@ -9,7 +9,9 @@ import {
   TransferTokenRequestAction,
   transferTokenSuccess,
   transferTokenFailure,
-  setBalance,
+  REFRESH_BALANCE_REQUEST,
+  refreshBalanceSuccess,
+  refreshBalanceFailure,
 } from './actions'
 import { WindowWithEthereum } from './types'
 
@@ -60,6 +62,7 @@ function* readPrettyBalance(token: ethers.Contract, address: string) {
 export function* walletSaga() {
   yield takeEvery(CONNECT_WALLET_REQUEST, handleConnectWalletRequest)
   yield takeEvery(TRANSFER_TOKEN_REQUEST, handleTransferTokenRequest)
+  yield takeEvery(REFRESH_BALANCE_REQUEST, handleRefreshBalanceRequest)
 }
 
 export function* handleConnectWalletRequest() {
@@ -93,13 +96,26 @@ export function* handleTransferTokenRequest(action: TransferTokenRequestAction) 
     const tx = (yield call(() => token.transfer(to.trim(), value))) as ethers.TransactionResponse
     yield call(() => tx.wait())
 
-    const fromAddress = (yield call(() => signer.getAddress())) as string
-    const pretty = (yield call(() => readPrettyBalance(token, fromAddress))) as string
-
     yield put(transferTokenSuccess(tx.hash))
-    yield put(setBalance(pretty))
   } catch (error) {
     const msg = isErrorWithMessage(error) ? error.message : 'Unknown error'
     yield put(transferTokenFailure(msg))
+  }
+}
+
+export function* handleRefreshBalanceRequest() {
+  try {
+    const provider: ethers.BrowserProvider = yield call(getProvider)
+
+    const signer = (yield* getSigner(provider)) as ethers.Signer
+    const address = (yield call(() => signer.getAddress())) as string
+
+    const token = getToken(provider)
+    const pretty = (yield call(() => readPrettyBalance(token, address))) as string
+
+    yield put(refreshBalanceSuccess(pretty))
+  } catch (error) {
+    const msg = isErrorWithMessage(error) ? error.message : 'Unknown error'
+    yield put(refreshBalanceFailure(msg))
   }
 }
