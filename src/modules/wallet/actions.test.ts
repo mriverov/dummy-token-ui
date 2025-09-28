@@ -64,12 +64,10 @@ test('transferTokenRequest creates the correct action', () => {
 })
 
 test('transferTokenSuccess creates the correct action', () => {
-  const action = transferTokenSuccess('0xtxhash')
+  const action = transferTokenSuccess()
   expect(action).toEqual({
     type: TRANSFER_TOKEN_SUCCESS,
-    payload: {
-      txHash: '0xtxhash',
-    },
+    payload: {},
   })
 })
 

@@ -22,7 +22,7 @@ const mapState = (state: RootState): MapStateProps => ({
   isConnected: selectIsConnected(state),
   isConnecting: selectIsConnecting(state),
   isTransferring: selectIsTransferring(state),
-  error: selectError(state) ?? undefined,
+  error: selectError(state) ?? null,
 })
 
 const mapDispatch = (dispatch: MapDispatch): MapDispatchProps => ({

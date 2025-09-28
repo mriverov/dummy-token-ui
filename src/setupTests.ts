@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import '@testing-library/jest-dom'
 import type { Eip1193Provider } from 'ethers'
+import React from 'react'
 
 // Mock ethers
 vi.mock('ethers', () => ({
@@ -21,7 +22,6 @@ vi.mock('ethers', () => ({
 // Mock Decentraland UI components
 vi.mock('decentraland-ui', () => ({
   Button: ({ children, onClick, disabled, loading, primary, basic, type, ...props }: any) => {
-    const React = require('react')
     return React.createElement(
       'button',
       {
@@ -35,16 +35,13 @@ vi.mock('decentraland-ui', () => ({
     )
   },
   Card: ({ children, ...props }: any) => {
-    const React = require('react')
     return React.createElement('div', { className: 'card', ...props }, children)
   },
   Header: ({ children, size, ...props }: any) => {
-    const React = require('react')
     const Tag = size === 'large' ? 'h1' : 'h2'
     return React.createElement(Tag, { className: 'header', ...props }, children)
   },
   Field: ({ label, placeholder, value, onChange, disabled, error, message, ...props }: any) => {
-    const React = require('react')
     return React.createElement('div', { className: 'field' }, [
       label && React.createElement('label', { key: 'label' }, label),
       React.createElement('input', {
@@ -61,7 +58,6 @@ vi.mock('decentraland-ui', () => ({
     ])
   },
   Center: ({ children, ...props }: any) => {
-    const React = require('react')
     return React.createElement('div', { className: 'center', ...props }, children)
   },
 }))
